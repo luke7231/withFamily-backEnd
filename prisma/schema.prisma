@@ -1,0 +1,147 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int     @id @default(autoincrement())
+  pushToken String?
+  userId    String  @unique
+
+  username     String
+  password     String
+  avatar       String?
+  bio          String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  photo        Photo[]
+  FamilyCode   FamilyCode? @relation(fields: [familyCodeId], references: [id])
+  familyCodeId Int?
+  Comment      Comment[]
+  Answer       Answer[]
+  TodayTalk    TodayTalk[]
+  Promise      Promise[]
+}
+
+model FamilyCode {
+  id        Int         @id @default(autoincrement())
+  code      String      @unique
+  users     User[]
+  photos    Photo[]
+  todayTalk TodayTalk[]
+  questions String[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  question  Question[]
+  hours     Int?
+  minutes   Int?
+  day1      DateTime?
+  day2      DateTime?
+  day3      DateTime?
+
+  promise            Promise[]
+  TodayTalkContainer TodayTalkContainer[]
+}
+
+model TodayTalkContainer {
+  id           Int         @id @default(autoincrement())
+  todayTalks   TodayTalk[]
+  deadLine     DateTime
+  familyCode   FamilyCode  @relation(fields: [familyCodeId], references: [id])
+  familyCodeId Int
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+}
+
+model TodayTalk {
+  id                   Int                 @id @default(autoincrement())
+  user                 User                @relation(fields: [userId], references: [id])
+  payload              String
+  file                 String?
+  FamilyCode           FamilyCode?         @relation(fields: [familyCodeId], references: [id])
+  familyCodeId         Int?
+  userId               Int
+  TodayTalkContainer   TodayTalkContainer? @relation(fields: [todayTalkContainerId], references: [id])
+  todayTalkContainerId Int?
+}
+
+model QuestionList {
+  id        Int      @id @default(autoincrement())
+  payloads  String
+  file      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Question {
+  id           Int         @id @default(autoincrement())
+  payload      String
+  file         String?
+  answers      Answer[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  FamilyCode   FamilyCode? @relation(fields: [familyCodeId], references: [id])
+  familyCodeId Int?
+}
+
+model Answer {
+  id         Int      @id @default(autoincrement())
+  payload    String?
+  user       User     @relation(fields: [userId], references: [id])
+  userId     Int
+  question   Question @relation(fields: [questionId], references: [id])
+  questionId Int
+  file       String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Promise {
+  id           Int         @id @default(autoincrement())
+  familyCode   FamilyCode? @relation(fields: [familyCodeId], references: [id])
+  user         User?       @relation(fields: [userId], references: [id])
+  date         DateTime
+  title        String
+  payload      String?
+  file         String?
+  participants String[]
+  timeOver     Boolean?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  familyCodeId Int?
+  userId       Int?
+  photos       Photo[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  user      User     @relation(fields: [userId], references: [id])
+  file      String?
+  payload   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    Int
+}
+
+model Photo {
+  id           Int         @id @default(autoincrement())
+  file         String
+  caption      String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  date         DateTime    @default(now())
+  User         User?       @relation(fields: [userId], references: [id])
+  userId       Int?
+  FamilyCode   FamilyCode? @relation(fields: [familyCodeId], references: [id])
+  familyCodeId Int?
+  Promise      Promise?    @relation(fields: [promiseId], references: [id])
+  promiseId    Int?
+}
