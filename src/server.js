@@ -4,6 +4,7 @@ import { resolvers, typeDefs } from './schema';
 import { getUser } from './user/user.utils';
 import express from 'express'
 import { graphqlUploadExpress } from 'graphql-upload'
+
 async function startServer() {
   const server = new ApolloServer({
     typeDefs,
