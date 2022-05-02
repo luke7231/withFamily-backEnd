@@ -16,21 +16,19 @@ export default {
                             id: loggedUser.id,
                         }
                     }
+                }, include: {
+                    question:true
                 }
             })
             // *. 시간 지났는지 체크하기
-            const firstQuestion = family.questions[0];
+            const firstQuestion = family.question[0];
             const hours = family.hours;
             const minutes = family.minutes;
             const day1 = family.day1;
-            
-            
             if (day1) {
                 elapsed = checkElapsed(day1);
-            } else {
-                elapsed = true;
             }
-            
+            console.log(firstQuestion)
             if (!firstQuestion) {
                 elapsed = true;
             }

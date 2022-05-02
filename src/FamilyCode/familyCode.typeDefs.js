@@ -11,6 +11,8 @@ export default gql`
         hours: String
         minutes: String
         day1: String
+        day2: String
+        day3: String
         createdAt: String
         updatedAt: String
     }

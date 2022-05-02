@@ -9,7 +9,7 @@ export const checkElapsed = (dateTime) => {
     let ready = false;
     
     if (now.getMonth() > comparedTime.getMonth()) {
-        ready = 'true'; 
+        ready = true;
     } else if (now.getMonth() == comparedTime.getMonth()) {
         if (now.getDate() > comparedTime.getDate()) {
             ready = true;
